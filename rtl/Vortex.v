@@ -5,14 +5,12 @@ module Vortex(
 	input  wire           clk,
 	input  wire           reset,
 	input  wire[31:0]     fe_instruction,
-	// input  wire[31:0]     in_cache_driver_out_data_0,
-	// input  wire[31:0]     in_cache_driver_out_data_1,
 	input  wire[31:0]     in_cache_driver_out_data[`NT_M1:0],
 	output wire[31:0]     curr_PC,
 	output wire[31:0]     out_cache_driver_in_address[`NT_M1:0],
 	output wire[2:0]      out_cache_driver_in_mem_read,
 	output wire[2:0]      out_cache_driver_in_mem_write,
-	output wire           out_cache_driver_in_valid[`NT_M1:0],
+	output wire[`NT_M1:0] out_cache_driver_in_valid,
 	output wire[31:0]     out_cache_driver_in_data[`NT_M1:0],
 	output wire           out_ebreak
 	);
@@ -29,14 +27,14 @@ assign curr_PC = fetch_curr_PC;
 wire[31:0]     fetch_instruction;
 wire           fetch_delay;
 wire[31:0]     fetch_curr_PC;
-wire           fetch_valid[`NT_M1:0];
+wire[`NT_M1:0] fetch_valid;
 wire[`NW_M1:0] fetch_warp_num;
 wire           fetch_ebreak;
 
 // From f_d_register
-wire[31:0]   f_d_instruction;
-wire[31:0]   f_d_curr_PC;
-wire         f_d_valid[`NT_M1:0];
+wire[31:0]     f_d_instruction;
+wire[31:0]     f_d_curr_PC;
+wire[`NT_M1:0] f_d_valid;
 wire[`NW_M1:0] f_d_warp_num;
 
 // From decode
@@ -60,10 +58,10 @@ reg             decode_jal;
 reg[31:0]       decode_jal_offset;
 reg[19:0]       decode_upper_immed;
 wire[31:0]      decode_PC_next;
-wire            decode_valid[`NT_M1:0];
+wire[`NT_M1:0]  decode_valid;
 wire            decode_clone_stall;
 wire            decode_change_mask;
-wire            decode_thread_mask[`NT_M1:0];
+wire[`NT_M1:0]  decode_thread_mask;
 wire[`NW_M1:0]  decode_warp_num;
 wire            decode_wspawn;
 wire[31:0]      decode_wspawn_pc;
@@ -90,8 +88,8 @@ wire[31:0]      d_e_curr_PC;
 wire            d_e_jal;
 wire[31:0]      d_e_jal_offset;
 wire[31:0]      d_e_PC_next;
-wire            d_e_valid[`NT_M1:0];
-wire[`NW_M1:0]    d_e_warp_num;
+wire[`NT_M1:0]  d_e_valid;
+wire[`NW_M1:0]  d_e_warp_num;
 
 
 // From execute
@@ -112,8 +110,8 @@ wire            execute_jal;
 wire[31:0]      execute_jal_dest;
 wire[31:0]      execute_branch_offset;
 wire[31:0]      execute_PC_next;
-wire            execute_valid[`NT_M1:0];
-wire[`NW_M1:0]    execute_warp_num;
+wire[`NT_M1:0]  execute_valid;
+wire[`NW_M1:0]  execute_warp_num;
 
 
 // From e_m_register
@@ -137,8 +135,8 @@ wire[31:0]      e_m_curr_PC;
 wire[31:0]      e_m_branch_offset;
 wire[2:0]       e_m_branch_type;
 wire[31:0]      e_m_PC_next;
-wire            e_m_valid[`NT_M1:0];
-wire[`NW_M1:0]    e_m_warp_num;
+wire[`NT_M1:0]  e_m_valid;
+wire[`NW_M1:0]  e_m_warp_num;
 
 
 // From memory
@@ -152,8 +150,8 @@ wire[1:0]       memory_wb;
 wire[4:0]       memory_rs1;
 wire[4:0]       memory_rs2;
 wire[31:0]      memory_PC_next;
-wire            memory_valid[`NT_M1:0];
-wire[`NW_M1:0]    memory_warp_num;
+wire[`NT_M1:0]  memory_valid;
+wire[`NW_M1:0]  memory_warp_num;
 
 // From m_w_register
 wire[31:0]      m_w_alu_result[`NT_M1:0];
@@ -165,13 +163,13 @@ wire[4:0]       m_w_rs1;
 wire[4:0]       m_w_rs2;
 /* verilator lint_on UNUSED */
 wire[31:0]      m_w_PC_next;
-wire            m_w_valid[`NT_M1:0];
-wire[`NW_M1:0]    m_w_warp_num;
+wire[`NT_M1:0]  m_w_valid;
+wire[`NW_M1:0]  m_w_warp_num;
 
 // From writeback
-wire[31:0]   writeback_write_data[`NT_M1:0];
-wire[4:0]    writeback_rd;
-wire[1:0]    writeback_wb;
+wire[31:0]     writeback_write_data[`NT_M1:0];
+wire[4:0]      writeback_rd;
+wire[1:0]      writeback_wb;
 wire[`NW_M1:0] writeback_warp_num;
 
 // From csr handler

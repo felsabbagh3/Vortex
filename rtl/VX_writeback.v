@@ -12,7 +12,7 @@ module VX_writeback (
 		input wire[1:0]  in_wb,
 		input wire[31:0] in_PC_next,
 		/* verilator lint_off UNUSED */
-		input wire       in_valid[`NT_M1:0],
+		input wire[`NT_M1:0]  in_valid,
 		/* verilator lint_on UNUSED */
 		input wire [`NW_M1:0]  in_warp_num,
 

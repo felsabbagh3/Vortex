@@ -5,7 +5,7 @@ module VX_f_d_reg (
 	  input wire             clk,
 	  input wire             reset,
 	  input wire[31:0]       in_instruction,
-	  input wire             in_valid[`NT_M1:0],
+	  input wire[`NT_M1:0]   in_valid,
 	  input wire[31:0]       in_curr_PC,
 	  input wire             in_fwd_stall,
 	  input wire             in_freeze,
@@ -14,7 +14,7 @@ module VX_f_d_reg (
 
 	  output wire[31:0]      out_instruction,
 	  output wire[31:0]      out_curr_PC,
-	  output wire            out_valid[`NT_M1:0],
+	  output wire[`NT_M1:0]  out_valid,
 	  output wire[`NW_M1:0]  out_warp_num
 );
 
@@ -24,7 +24,7 @@ module VX_f_d_reg (
 
 	reg[31:0]      instruction;
 	reg[31:0]      curr_PC;
-	reg            valid[`NT_M1:0];
+	reg[`NT_M1:0]  valid;
 	reg[`NW_M1:0]  warp_num;
 
 	integer reset_cur_thread = 0;

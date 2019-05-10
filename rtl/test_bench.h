@@ -175,9 +175,10 @@ bool Vortex::dbus_driver()
     // std::cout << "DBUS DRIVER\n" << std::endl;
     ////////////////////// DBUS //////////////////////
 
+    int valid_mask = 0x1;
     for (unsigned curr_th = 0; curr_th < NT; curr_th++)
     {
-        if ((vortex->out_cache_driver_in_mem_write != NO_MEM_WRITE) && vortex->out_cache_driver_in_valid[curr_th])
+        if ((vortex->out_cache_driver_in_mem_write != NO_MEM_WRITE) && (vortex->out_cache_driver_in_valid & (valid_mask << curr_th)))
         {
                 data_write = (uint32_t) vortex->out_cache_driver_in_data[curr_th];
                 addr       = (uint32_t) vortex->out_cache_driver_in_address[curr_th];
@@ -212,7 +213,7 @@ bool Vortex::dbus_driver()
     for (unsigned curr_th = 0; curr_th < NT; curr_th++)
     {
 
-        if ((vortex->out_cache_driver_in_mem_read != NO_MEM_READ) && vortex->out_cache_driver_in_valid[curr_th])
+        if ((vortex->out_cache_driver_in_mem_read != NO_MEM_READ) && (vortex->out_cache_driver_in_valid & (valid_mask << curr_th)))
         {
 
 

@@ -28,7 +28,7 @@ module VX_d_e_reg (
 		input wire[31:0]     in_jal_offset,
 		input wire           in_freeze,
 		input wire           in_clone_stall,
-		input wire           in_valid[`NT_M1:0],
+		input wire[`NT_M1:0] in_valid,
 		input wire[`NW_M1:0] in_warp_num,
 
 		output wire[11:0]     out_csr_address, // done
@@ -51,35 +51,35 @@ module VX_d_e_reg (
 		output wire           out_jal,
 		output wire[31:0]     out_jal_offset,
 		output wire[31:0]     out_PC_next,
-		output wire           out_valid[`NT_M1:0],
+		output wire[`NT_M1:0] out_valid,
 	    output wire[`NW_M1:0] out_warp_num
 	);
 
 
-		reg[4:0]  rd;
-		reg[4:0]  rs1;
-		reg[4:0]  rs2;
-		reg[31:0] a_reg_data[`NT_M1:0];
-		reg[31:0] b_reg_data[`NT_M1:0];
-		reg[4:0]  alu_op;
-		reg[1:0]  wb;
-		reg[31:0] PC_next_out;
-		reg       rs2_src;
-		reg[31:0] itype_immed;
-		reg[2:0]  mem_read;
-		reg[2:0]  mem_write;
-		reg[2:0]  branch_type;
-		reg[19:0] upper_immed;
-		reg[11:0] csr_address;
-		reg       is_csr;
-		reg[31:0] csr_mask;
-		reg[31:0] curr_PC;
-		reg       jal;
-		reg[31:0] jal_offset;
-		reg       valid[`NT_M1:0];
+		reg[4:0]      rd;
+		reg[4:0]      rs1;
+		reg[4:0]      rs2;
+		reg[31:0]     a_reg_data[`NT_M1:0];
+		reg[31:0]     b_reg_data[`NT_M1:0];
+		reg[4:0]      alu_op;
+		reg[1:0]      wb;
+		reg[31:0]     PC_next_out;
+		reg           rs2_src;
+		reg[31:0]     itype_immed;
+		reg[2:0]      mem_read;
+		reg[2:0]      mem_write;
+		reg[2:0]      branch_type;
+		reg[19:0]     upper_immed;
+		reg[11:0]     csr_address;
+		reg           is_csr;
+		reg[31:0]     csr_mask;
+		reg[31:0]     curr_PC;
+		reg           jal;
+		reg[31:0]     jal_offset;
+		reg[`NT_M1:0] valid;
 
-		reg[31:0] reg_data_z[`NT_M1:0];
-		reg       valid_z[`NT_M1:0];
+		reg[31:0]     reg_data_z[`NT_M1:0];
+		reg[`NT_M1:0] valid_z;
 
 		reg[`NW_M1:0] warp_num;
 

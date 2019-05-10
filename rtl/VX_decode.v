@@ -6,12 +6,12 @@ module VX_decode(
 	input wire            clk,
 	input wire[31:0]      in_instruction,
 	input wire[31:0]      in_curr_PC,
-	input wire            in_valid[`NT_M1:0],
+	input wire[`NT_M1:0]  in_valid,
 	// WriteBack inputs
 	input wire[31:0]      in_write_data[`NT_M1:0],
 	input wire[4:0]       in_rd,
 	input wire[1:0]       in_wb,
-	input wire            in_wb_valid[`NT_M1:0],
+	input wire[`NT_M1:0]  in_wb_valid,
 	input wire[`NW_M1:0]  in_wb_warp_num,
 
 	// FORWARDING INPUTS
@@ -46,8 +46,8 @@ module VX_decode(
 	output wire[31:0]     out_PC_next,
 	output reg            out_clone_stall,
 	output wire           out_change_mask,
-	output wire           out_thread_mask[`NT_M1:0],
-	output wire           out_valid[`NT_M1:0],
+	output wire[`NT_M1:0] out_thread_mask,
+	output wire[`NT_M1:0] out_valid,
 	output wire[`NW_M1:0] out_warp_num,
 	output wire           out_wspawn,
 	output wire[31:0]     out_wspawn_pc,
@@ -240,8 +240,8 @@ module VX_decode(
 		// end
 
 
-		wire     jalrs_thread_mask[`NT_M1:0];
-		wire     jmprt_thread_mask[`NT_M1:0];
+		wire[`NT_M1:0] jalrs_thread_mask;
+		wire[`NT_M1:0] jmprt_thread_mask;
 
 		genvar tm_i;
 		generate

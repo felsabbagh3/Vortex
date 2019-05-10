@@ -6,38 +6,38 @@ module VX_memory (
 	/* verilator lint_off UNUSED */
 		input wire        clk,
 		/* verilator lint_on UNUSED */
-		input wire[31:0]  in_alu_result[`NT_M1:0],
-		input wire[2:0]   in_mem_read, 
-		input wire[2:0]   in_mem_write,
-		input wire[4:0]   in_rd,
-		input wire[1:0]   in_wb,
-		input wire[4:0]   in_rs1,
-		input wire[4:0]   in_rs2,
-		input wire[31:0]  in_rd2[`NT_M1:0],
-		input wire[31:0]  in_PC_next,
-		input wire[31:0]  in_curr_PC,
-		input wire[31:0]  in_branch_offset,
-		input wire[2:0]   in_branch_type, 
-		input wire        in_valid[`NT_M1:0],
-		input wire[31:0]  in_cache_driver_out_data[`NT_M1:0],
+		input wire[31:0]      in_alu_result[`NT_M1:0],
+		input wire[2:0]       in_mem_read, 
+		input wire[2:0]       in_mem_write,
+		input wire[4:0]       in_rd,
+		input wire[1:0]       in_wb,
+		input wire[4:0]       in_rs1,
+		input wire[4:0]       in_rs2,
+		input wire[31:0]      in_rd2[`NT_M1:0],
+		input wire[31:0]      in_PC_next,
+		input wire[31:0]      in_curr_PC,
+		input wire[31:0]      in_branch_offset,
+		input wire[2:0]       in_branch_type, 
+		input wire[`NT_M1:0]  in_valid,
+		input wire[31:0]      in_cache_driver_out_data[`NT_M1:0],
 		input wire[`NW_M1:0]  in_warp_num,
 
-		output wire[31:0] out_alu_result[`NT_M1:0],
-		output wire[31:0] out_mem_result[`NT_M1:0],
-		output wire[4:0]  out_rd,
-		output wire[1:0]  out_wb,
-		output wire[4:0]  out_rs1,
-		output wire[4:0]  out_rs2,
-		output reg        out_branch_dir,
-		output wire[31:0] out_branch_dest,
-		output wire       out_delay,
-		output wire[31:0] out_PC_next,
-		output wire       out_valid[`NT_M1:0],
-		output wire[31:0] out_cache_driver_in_address[`NT_M1:0],
-		output wire[2:0]  out_cache_driver_in_mem_read,
-		output wire[2:0]  out_cache_driver_in_mem_write,
-		output wire       out_cache_driver_in_valid[`NT_M1:0],
-		output wire[31:0] out_cache_driver_in_data[`NT_M1:0],
+		output wire[31:0]      out_alu_result[`NT_M1:0],
+		output wire[31:0]      out_mem_result[`NT_M1:0],
+		output wire[4:0]       out_rd,
+		output wire[1:0]       out_wb,
+		output wire[4:0]       out_rs1,
+		output wire[4:0]       out_rs2,
+		output reg             out_branch_dir,
+		output wire[31:0]      out_branch_dest,
+		output wire            out_delay,
+		output wire[31:0]      out_PC_next,
+		output wire[`NT_M1:0]  out_valid,
+		output wire[31:0]      out_cache_driver_in_address[`NT_M1:0],
+		output wire[2:0]       out_cache_driver_in_mem_read,
+		output wire[2:0]       out_cache_driver_in_mem_write,
+		output wire[`NT_M1:0]  out_cache_driver_in_valid,
+		output wire[31:0]      out_cache_driver_in_data[`NT_M1:0],
 		output wire[`NW_M1:0]  out_warp_num
 	);	
 
@@ -63,7 +63,10 @@ module VX_memory (
 		assign out_cache_driver_in_mem_read  = in_mem_read;
 		assign out_cache_driver_in_mem_write = in_mem_write;
 		assign out_cache_driver_in_data      = in_rd2;
-		assign out_cache_driver_in_valid     = in_valid;
+
+		assign out_cache_driver_in_valid = in_valid;
+		// assign out_cache_driver_in_valid[0]  = in_valid[0];
+		// assign out_cache_driver_in_valid[1]  = in_valid[1];
 
 		// always @(*) begin
 		// 	if (in_valid[0] && (in_mem_write == `SW_MEM_WRITE) && (in_alu_result[0] >= 32'h810049a0)) begin

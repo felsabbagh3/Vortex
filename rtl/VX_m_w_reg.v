@@ -3,39 +3,39 @@
 `include "VX_define.v"
 
 module VX_m_w_reg (
-		input wire        clk,
-		input wire[31:0]  in_alu_result[`NT_M1:0],
-		input wire[31:0]  in_mem_result[`NT_M1:0], // NEW
-		input wire[4:0]   in_rd,
-		input wire[1:0]   in_wb,
-		input wire[4:0]   in_rs1,
-		input wire[4:0]   in_rs2,
-		input wire[31:0]  in_PC_next,
-		input wire        in_freeze,
-		input wire        in_valid[`NT_M1:0],
+		input wire           clk,
+		input wire[31:0]     in_alu_result[`NT_M1:0],
+		input wire[31:0]     in_mem_result[`NT_M1:0], // NEW
+		input wire[4:0]      in_rd,
+		input wire[1:0]      in_wb,
+		input wire[4:0]      in_rs1,
+		input wire[4:0]      in_rs2,
+		input wire[31:0]     in_PC_next,
+		input wire           in_freeze,
+		input wire[`NT_M1:0] in_valid,
 		input wire[`NW_M1:0] in_warp_num,
 
-		output wire[31:0] out_alu_result[`NT_M1:0],
-		output wire[31:0] out_mem_result[`NT_M1:0], // NEW
-		output wire[4:0]  out_rd,
-		output wire[1:0]  out_wb,
-		output wire[4:0]  out_rs1,
-		output wire[4:0]  out_rs2,
-		output wire[31:0] out_PC_next,
-		output wire       out_valid[`NT_M1:0],
+		output wire[31:0]     out_alu_result[`NT_M1:0],
+		output wire[31:0]     out_mem_result[`NT_M1:0], // NEW
+		output wire[4:0]      out_rd,
+		output wire[1:0]      out_wb,
+		output wire[4:0]      out_rs1,
+		output wire[4:0]      out_rs2,
+		output wire[31:0]     out_PC_next,
+		output wire[`NT_M1:0] out_valid,
 	    output wire[`NW_M1:0] out_warp_num
 	);
 
 
 
-		reg[31:0] alu_result[`NT_M1:0];
-		reg[31:0] mem_result[`NT_M1:0];
-		reg[4:0]  rd;
-		reg[4:0]  rs1;
-		reg[4:0]  rs2;
-		reg[1:0]  wb;
-		reg[31:0] PC_next;
-		reg       valid[`NT_M1:0];
+		reg[31:0]     alu_result[`NT_M1:0];
+		reg[31:0]     mem_result[`NT_M1:0];
+		reg[4:0]      rd;
+		reg[4:0]      rs1;
+		reg[4:0]      rs2;
+		reg[1:0]      wb;
+		reg[31:0]     PC_next;
+		reg[`NT_M1:0] valid;
 		reg[`NW_M1:0] warp_num;
 
 		initial begin
