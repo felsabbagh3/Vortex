@@ -152,41 +152,41 @@ module VX_decode(
 			.w0_t0_registers  (w0_t0_registers)
 		);
 
-		wire               context_one_valid = (in_wb_warp_num == 1);
-		wire[(`NT*32)-1:0] one_a_reg_data;
-		wire[(`NT*32)-1:0] one_b_reg_data;
-		wire                one_clone_stall;
-		VX_context_slave VX_Context_one(
-			.clk              (clk),
-			.in_warp          (curr_warp_one),
-			.in_wb_warp       (context_one_valid),
-			.in_valid         (in_wb_valid),
-			.in_rd            (in_rd),
-			.in_src1          (out_rs1),
-			.in_src2          (out_rs2),
-			.in_curr_PC       (in_curr_PC),
-			.in_is_clone      (is_clone),
-			.in_is_jal        (is_jal),
-			.in_src1_fwd      (in_src1_fwd),
-			.in_src1_fwd_data (in_src1_fwd_data),
-			.in_src2_fwd      (in_src2_fwd),
-			.in_src2_fwd_data (in_src2_fwd_data),
-			.in_write_register(write_register),
-			.in_write_data    (in_write_data),
-			.in_wspawn_regs   (w0_t0_registers),
-			.in_wspawn        (is_wspawn),
-			.out_a_reg_data   (one_a_reg_data),
-			.out_b_reg_data   (one_b_reg_data),
-			.out_clone_stall  (one_clone_stall)
-		);
+		// wire               context_one_valid = (in_wb_warp_num == 1);
+		// wire[(`NT*32)-1:0] one_a_reg_data;
+		// wire[(`NT*32)-1:0] one_b_reg_data;
+		// wire                one_clone_stall;
+		// VX_context_slave VX_Context_one(
+		// 	.clk              (clk),
+		// 	.in_warp          (curr_warp_one),
+		// 	.in_wb_warp       (context_one_valid),
+		// 	.in_valid         (in_wb_valid),
+		// 	.in_rd            (in_rd),
+		// 	.in_src1          (out_rs1),
+		// 	.in_src2          (out_rs2),
+		// 	.in_curr_PC       (in_curr_PC),
+		// 	.in_is_clone      (is_clone),
+		// 	.in_is_jal        (is_jal),
+		// 	.in_src1_fwd      (in_src1_fwd),
+		// 	.in_src1_fwd_data (in_src1_fwd_data),
+		// 	.in_src2_fwd      (in_src2_fwd),
+		// 	.in_src2_fwd_data (in_src2_fwd_data),
+		// 	.in_write_register(write_register),
+		// 	.in_write_data    (in_write_data),
+		// 	.in_wspawn_regs   (w0_t0_registers),
+		// 	.in_wspawn        (is_wspawn),
+		// 	.out_a_reg_data   (one_a_reg_data),
+		// 	.out_b_reg_data   (one_b_reg_data),
+		// 	.out_clone_stall  (one_clone_stall)
+		// );
 
-		assign out_a_reg_data  = curr_warp_zero ? zero_a_reg_data  : one_a_reg_data;
-		assign out_b_reg_data  = curr_warp_zero ? zero_b_reg_data  : one_b_reg_data;
-		assign out_clone_stall = zero_clone_stall || one_clone_stall;
+		// assign out_a_reg_data  = curr_warp_zero ? zero_a_reg_data  : one_a_reg_data;
+		// assign out_b_reg_data  = curr_warp_zero ? zero_b_reg_data  : one_b_reg_data;
+		// assign out_clone_stall = zero_clone_stall || one_clone_stall;
 
-		// assign out_a_reg_data  = zero_a_reg_data;
-		// assign out_b_reg_data  = zero_b_reg_data;
-		// assign out_clone_stall = zero_clone_stall;
+		assign out_a_reg_data  = zero_a_reg_data;
+		assign out_b_reg_data  = zero_b_reg_data;
+		assign out_clone_stall = zero_clone_stall;
 
 		// always @(*) begin
 		// 	if (context_one_valid) begin

@@ -116,33 +116,33 @@ module VX_fetch (
 			);
 
 
-		wire           warp_one_change_mask = in_change_mask && (in_decode_warp_num == 1);
-		wire           warp_one_jal         = in_jal         && (in_memory_warp_num == 1);
-		wire           warp_one_branch      = in_branch_dir  && (in_memory_warp_num == 1);
-		wire           warp_one_stall       = stall          || (warp_num == 0);
-		wire[31:0]     warp_one_pc;
-		wire[`NT_M1:0] warp_one_valid;
-		VX_warp VX_Warp_one(
-			.clk           (clk),
-			.reset         (reset),
-			.stall         (warp_one_stall),
-			.in_thread_mask(in_thread_mask),
-			.in_change_mask(warp_one_change_mask),
-			.in_jal        (warp_one_jal),
-			.in_jal_dest   (in_jal_dest),
-			.in_branch_dir (warp_one_branch),
-			.in_branch_dest(in_branch_dest),
-			.in_wspawn     (in_wspawn),
-			.in_wspawn_pc  (in_wspawn_pc),
-			.out_PC        (warp_one_pc),
-			.out_valid     (warp_one_valid)
-			);
+		// wire           warp_one_change_mask = in_change_mask && (in_decode_warp_num == 1);
+		// wire           warp_one_jal         = in_jal         && (in_memory_warp_num == 1);
+		// wire           warp_one_branch      = in_branch_dir  && (in_memory_warp_num == 1);
+		// wire           warp_one_stall       = stall          || (warp_num == 0);
+		// wire[31:0]     warp_one_pc;
+		// wire[`NT_M1:0] warp_one_valid;
+		// VX_warp VX_Warp_one(
+		// 	.clk           (clk),
+		// 	.reset         (reset),
+		// 	.stall         (warp_one_stall),
+		// 	.in_thread_mask(in_thread_mask),
+		// 	.in_change_mask(warp_one_change_mask),
+		// 	.in_jal        (warp_one_jal),
+		// 	.in_jal_dest   (in_jal_dest),
+		// 	.in_branch_dir (warp_one_branch),
+		// 	.in_branch_dest(in_branch_dest),
+		// 	.in_wspawn     (in_wspawn),
+		// 	.in_wspawn_pc  (in_wspawn_pc),
+		// 	.out_PC        (warp_one_pc),
+		// 	.out_valid     (warp_one_valid)
+		// 	);
 
-		assign out_PC    = (warp_num == 0) ? warp_zero_pc    : warp_one_pc;
-		assign out_valid = (warp_num == 0) ? warp_zero_valid : warp_one_valid;
+		// assign out_PC    = (warp_num == 0) ? warp_zero_pc    : warp_one_pc;
+		// assign out_valid = (warp_num == 0) ? warp_zero_valid : warp_one_valid;
 
-		// assign out_PC    = warp_zero_pc;
-		// assign out_valid = warp_zero_valid;
+		assign out_PC    = warp_zero_pc;
+		assign out_valid = warp_zero_valid;
 
 		// always @(*) begin
 		// 	$display("FETCH PC: %h (%h, %h, %h)",delete, delete, in_jal_dest, in_branch_dest);
