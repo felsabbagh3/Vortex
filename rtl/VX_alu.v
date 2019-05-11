@@ -37,12 +37,12 @@ module VX_alu(
 		// end
 
 		/* verilator lint_off UNUSED */
-		wire[63:0] mult_unsigned_result  = ALU_in1 * ALU_in2;
-		wire[63:0] mult_signed_result    = $signed(ALU_in1) * $signed(ALU_in2);
+		// wire[63:0] mult_unsigned_result  = ALU_in1 * ALU_in2;
+		// wire[63:0] mult_signed_result    = $signed(ALU_in1) * $signed(ALU_in2);
 
 		wire[63:0] alu_in1_signed = {{32{ALU_in1[31]}}, ALU_in1};
 
-		wire[63:0] mult_signed_un_result = alu_in1_signed * ALU_in2;
+		// wire[63:0] mult_signed_un_result = alu_in1_signed * ALU_in2;
 		/* verilator lint_on UNUSED */
 		
 		reg[31:0] use_out_alu_result;
@@ -65,14 +65,14 @@ module VX_alu(
 				`CSR_ALU_RW: use_out_alu_result = in_csr_data;
 				`CSR_ALU_RS: use_out_alu_result = in_csr_data;
 				`CSR_ALU_RC: use_out_alu_result = in_csr_data;
-				`MUL:        begin use_out_alu_result = mult_signed_result[31:0]; end
-				`MULH:       use_out_alu_result = mult_signed_result[63:32];
-				`MULHSU:     use_out_alu_result = mult_signed_un_result[63:32];
-				`MULHU:      use_out_alu_result = mult_unsigned_result[63:32];
-				`DIV:        use_out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : $signed($signed(ALU_in1) / $signed(ALU_in2));
-				`DIVU:       use_out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : ALU_in1 / ALU_in2;
-				`REM:        use_out_alu_result = (ALU_in2 == 0) ? ALU_in1 : $signed($signed(ALU_in1) % $signed(ALU_in2));
-				`REMU:       use_out_alu_result = (ALU_in2 == 0) ? ALU_in1 : ALU_in1 % ALU_in2;
+				// `MUL:        begin use_out_alu_result = mult_signed_result[31:0]; end
+				// `MULH:       use_out_alu_result = mult_signed_result[63:32];
+				// `MULHSU:     use_out_alu_result = mult_signed_un_result[63:32];
+				// `MULHU:      use_out_alu_result = mult_unsigned_result[63:32];
+				// `DIV:        use_out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : $signed($signed(ALU_in1) / $signed(ALU_in2));
+				// `DIVU:       use_out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : ALU_in1 / ALU_in2;
+				// `REM:        use_out_alu_result = (ALU_in2 == 0) ? ALU_in1 : $signed($signed(ALU_in1) % $signed(ALU_in2));
+				// `REMU:       use_out_alu_result = (ALU_in2 == 0) ? ALU_in1 : ALU_in1 % ALU_in2;
 				default: use_out_alu_result = 32'h0;
 			endcase // in_alu_op
 		end

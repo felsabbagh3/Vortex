@@ -25,6 +25,7 @@ module VX_context (
   output wire[(32*32)-1:0]  w0_t0_registers
 	
 );
+
 		reg[5:0] state_stall;
 		initial begin
 			state_stall = 0;
