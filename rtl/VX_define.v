@@ -1,6 +1,6 @@
 
-`define NT 2
-`define NT_M1 1
+`define NT 1
+`define NT_M1 0
 
 `define NW_M1 1
 
