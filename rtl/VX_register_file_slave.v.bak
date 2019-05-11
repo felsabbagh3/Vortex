@@ -56,13 +56,12 @@ module VX_register_file_slave (
 
 	assign write_enable   = (in_write_register && (in_rd != 5'h0)) && in_valid && in_wb_warp;
 
-	integer f;
 	always @(posedge clk) begin
 		if(write_enable && !in_clone) begin
 			// $display("RF: Writing %h to %d",write_data, write_register);
 			registers[write_register] <= write_data;
 		end else if (in_clone && in_to_clone && in_warp) begin
-			for (f = 0; f < 32; f=f+1) registers[f] <= temp_regs[f];
+			registers <= temp_regs;
 		end
 	end
 

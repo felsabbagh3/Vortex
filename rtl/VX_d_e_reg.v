@@ -7,8 +7,8 @@ module VX_d_e_reg (
 		input wire[4:0]      in_rd,
 		input wire[4:0]      in_rs1,
 		input wire[4:0]      in_rs2,
-		input wire[31:0]     in_a_reg_data[`NT_M1:0],
-		input wire[31:0]     in_b_reg_data[`NT_M1:0],
+		input wire[(`NT*32)-1:0]     in_a_reg_data,
+		input wire[(`NT*32)-1:0]     in_b_reg_data,
 		input wire[4:0]      in_alu_op,
 		input wire[1:0]      in_wb,
 		input wire           in_rs2_src, // NEW
@@ -37,8 +37,8 @@ module VX_d_e_reg (
 		output wire[4:0]      out_rd,
 		output wire[4:0]      out_rs1,
 		output wire[4:0]      out_rs2,
-		output wire[31:0]     out_a_reg_data[`NT_M1:0],
-		output wire[31:0]     out_b_reg_data[`NT_M1:0],
+		output wire[(`NT*32)-1:0]     out_a_reg_data,
+		output wire[(`NT*32)-1:0]    out_b_reg_data,
 		output wire[4:0]      out_alu_op,
 		output wire[1:0]      out_wb,
 		output wire           out_rs2_src, // NEW
@@ -59,8 +59,8 @@ module VX_d_e_reg (
 		reg[4:0]      rd;
 		reg[4:0]      rs1;
 		reg[4:0]      rs2;
-		reg[31:0]     a_reg_data[`NT_M1:0];
-		reg[31:0]     b_reg_data[`NT_M1:0];
+		reg[(`NT*32)-1:0]     a_reg_data;
+		reg[(`NT*32)-1:0]     b_reg_data;
 		reg[4:0]      alu_op;
 		reg[1:0]      wb;
 		reg[31:0]     PC_next_out;
@@ -78,23 +78,25 @@ module VX_d_e_reg (
 		reg[31:0]     jal_offset;
 		reg[`NT_M1:0] valid;
 
-		reg[31:0]     reg_data_z[`NT_M1:0];
+		reg[(`NT*32)-1:0]     reg_data_z;
 		reg[`NT_M1:0] valid_z;
 
 		reg[`NW_M1:0] warp_num;
 
 		integer ini_reg;
+		integer ini_z;
 		initial begin
 			rd          = 0;
 			rs1         = 0;
-			for (ini_reg = 0; ini_reg < `NT; ini_reg = ini_reg + 1)
-			begin
-				a_reg_data[ini_reg]   = 0;
-				b_reg_data[ini_reg]   = 0;
-				reg_data_z[ini_reg]   = 0;
+			for (ini_reg = 0; ini_reg < `NT; ini_reg = ini_reg + 1) begin
 				valid[ini_reg]        = 0;
 				valid_z[ini_reg]      = 0;
 			end
+
+			for (ini_z = 0; ini_z < (`NT * 32); ini_z = ini_z + 1) begin
+				reg_data_z[ini_z] = 0;
+			end
+
 			rs2         = 0;
 			alu_op      = 0;
 			wb          = `NO_WB;

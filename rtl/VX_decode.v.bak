@@ -44,7 +44,7 @@ module VX_decode(
 	output reg[31:0]          out_jal_offset,
 	output reg[19:0]          out_upper_immed,
 	output wire[31:0]         out_PC_next,
-	output wire               out_clone_stall,
+	output reg                out_clone_stall,
 	output wire               out_change_mask,
 	output wire[`NT_M1:0]     out_thread_mask,
 	output wire[`NT_M1:0]     out_valid,
@@ -116,7 +116,7 @@ module VX_decode(
 		wire               context_zero_valid = (in_wb_warp_num == 0);
 		wire[(`NT*32)-1:0] zero_a_reg_data;
 		wire[(`NT*32)-1:0] zero_b_reg_data;
-		wire                zero_clone_stall;
+		reg                zero_clone_stall;
 
 		// always @(*) begin
 		// 	$display("DECODE WARP: %h", in_warp_num);
@@ -155,7 +155,7 @@ module VX_decode(
 		wire               context_one_valid = (in_wb_warp_num == 1);
 		wire[(`NT*32)-1:0] one_a_reg_data;
 		wire[(`NT*32)-1:0] one_b_reg_data;
-		wire                one_clone_stall;
+		reg                one_clone_stall;
 		VX_context_slave VX_Context_one(
 			.clk              (clk),
 			.in_warp          (curr_warp_one),
@@ -183,10 +183,6 @@ module VX_decode(
 		assign out_a_reg_data  = curr_warp_zero ? zero_a_reg_data  : one_a_reg_data;
 		assign out_b_reg_data  = curr_warp_zero ? zero_b_reg_data  : one_b_reg_data;
 		assign out_clone_stall = zero_clone_stall || one_clone_stall;
-
-		// assign out_a_reg_data  = zero_a_reg_data;
-		// assign out_b_reg_data  = zero_b_reg_data;
-		// assign out_clone_stall = zero_clone_stall;
 
 		// always @(*) begin
 		// 	if (context_one_valid) begin

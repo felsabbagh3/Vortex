@@ -21,9 +21,9 @@ module VX_context_slave (
   input wire[(32*32)-1:0]  in_wspawn_regs,
   input wire               in_wspawn,
 
-  output wire[(`NT*32)-1:0] out_a_reg_data,
-  output wire[(`NT*32)-1:0] out_b_reg_data,
-  output wire               out_clone_stall
+  output reg[(`NT*32)-1:0] out_a_reg_data,
+  output reg[(`NT*32)-1:0] out_b_reg_data,
+  output wire              out_clone_stall
 	
 );
 		wire[(`NT*32)-1:0] rd1_register;

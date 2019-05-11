@@ -10,7 +10,7 @@ module VX_alu(
 	input wire[4:0]   in_alu_op,
 	input wire[31:0]  in_csr_data, // done
 	input wire[31:0]  in_curr_PC,
-	output reg[31:0]  out_alu_result
+	output wire[31:0]  out_alu_result
 	);
 
 
@@ -44,36 +44,38 @@ module VX_alu(
 
 		wire[63:0] mult_signed_un_result = alu_in1_signed * ALU_in2;
 		/* verilator lint_on UNUSED */
+		
+		reg[31:0] use_out_alu_result;
 
 		always @(*) begin
 			case(in_alu_op)
-				`ADD:        out_alu_result = $signed(ALU_in1) + $signed(ALU_in2);
-				`SUB:        out_alu_result = $signed(ALU_in1) - $signed(ALU_in2);
-				`SLLA:       out_alu_result = ALU_in1 << ALU_in2[4:0];
-				`SLT:        out_alu_result = ($signed(ALU_in1) < $signed(ALU_in2)) ? 32'h1 : 32'h0;
-				`SLTU:       out_alu_result = ALU_in1 < ALU_in2 ? 32'h1 : 32'h0;
-				`XOR:        out_alu_result = ALU_in1 ^ ALU_in2;
-				`SRL:        out_alu_result = ALU_in1 >> ALU_in2[4:0];						
-				`SRA:        out_alu_result = $signed(ALU_in1)  >>> ALU_in2[4:0];
-				`OR:         out_alu_result = ALU_in1 | ALU_in2;	
-				`AND:        out_alu_result = ALU_in2 & ALU_in1;	
-				`SUBU:       out_alu_result = (ALU_in1 >= ALU_in2) ? 32'h0 : 32'hffffffff;
-				`LUI_ALU:    out_alu_result = upper_immed;
-				`AUIPC_ALU:  out_alu_result = $signed(in_curr_PC) + $signed(upper_immed);
-				`CSR_ALU_RW: out_alu_result = in_csr_data;
-				`CSR_ALU_RS: out_alu_result = in_csr_data;
-				`CSR_ALU_RC: out_alu_result = in_csr_data;
-				`MUL:        begin out_alu_result = mult_signed_result[31:0]; end
-				`MULH:       out_alu_result = mult_signed_result[63:32];
-				`MULHSU:     out_alu_result = mult_signed_un_result[63:32];
-				`MULHU:      out_alu_result = mult_unsigned_result[63:32];
-				`DIV:        out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : $signed($signed(ALU_in1) / $signed(ALU_in2));
-				`DIVU:       out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : ALU_in1 / ALU_in2;
-				`REM:        out_alu_result = (ALU_in2 == 0) ? ALU_in1 : $signed($signed(ALU_in1) % $signed(ALU_in2));
-				`REMU:       out_alu_result = (ALU_in2 == 0) ? ALU_in1 : ALU_in1 % ALU_in2;
-				default: out_alu_result = 32'h0;
+				`ADD:        use_out_alu_result = $signed(ALU_in1) + $signed(ALU_in2);
+				`SUB:        use_out_alu_result = $signed(ALU_in1) - $signed(ALU_in2);
+				`SLLA:       use_out_alu_result = ALU_in1 << ALU_in2[4:0];
+				`SLT:        use_out_alu_result = ($signed(ALU_in1) < $signed(ALU_in2)) ? 32'h1 : 32'h0;
+				`SLTU:       use_out_alu_result = ALU_in1 < ALU_in2 ? 32'h1 : 32'h0;
+				`XOR:        use_out_alu_result = ALU_in1 ^ ALU_in2;
+				`SRL:        use_out_alu_result = ALU_in1 >> ALU_in2[4:0];						
+				`SRA:        use_out_alu_result = $signed(ALU_in1)  >>> ALU_in2[4:0];
+				`OR:         use_out_alu_result = ALU_in1 | ALU_in2;	
+				`AND:        use_out_alu_result = ALU_in2 & ALU_in1;	
+				`SUBU:       use_out_alu_result = (ALU_in1 >= ALU_in2) ? 32'h0 : 32'hffffffff;
+				`LUI_ALU:    use_out_alu_result = upper_immed;
+				`AUIPC_ALU:  use_out_alu_result = $signed(in_curr_PC) + $signed(upper_immed);
+				`CSR_ALU_RW: use_out_alu_result = in_csr_data;
+				`CSR_ALU_RS: use_out_alu_result = in_csr_data;
+				`CSR_ALU_RC: use_out_alu_result = in_csr_data;
+				`MUL:        begin use_out_alu_result = mult_signed_result[31:0]; end
+				`MULH:       use_out_alu_result = mult_signed_result[63:32];
+				`MULHSU:     use_out_alu_result = mult_signed_un_result[63:32];
+				`MULHU:      use_out_alu_result = mult_unsigned_result[63:32];
+				`DIV:        use_out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : $signed($signed(ALU_in1) / $signed(ALU_in2));
+				`DIVU:       use_out_alu_result = (ALU_in2 == 0) ? 32'hffffffff : ALU_in1 / ALU_in2;
+				`REM:        use_out_alu_result = (ALU_in2 == 0) ? ALU_in1 : $signed($signed(ALU_in1) % $signed(ALU_in2));
+				`REMU:       use_out_alu_result = (ALU_in2 == 0) ? ALU_in1 : ALU_in1 % ALU_in2;
+				default: use_out_alu_result = 32'h0;
 			endcase // in_alu_op
 		end
-
+	assign out_alu_result = use_out_alu_result;
 
 endmodule // VX_alu

@@ -32,8 +32,8 @@ module VX_fetch (
 	output wire           out_ebreak
 );
 
-		wire       stall;
-		wire[31:0] out_PC;
+		reg       stall;
+		reg[31:0] out_PC;
 
 		reg[`NW_M1:0] warp_num;
 		reg[`NW_M1:0] warp_state;
@@ -45,43 +45,22 @@ module VX_fetch (
 
 		wire add_warp    = in_wspawn && !in_ebreak && !in_clone_stall;
 		wire remove_warp = in_ebreak && !in_wspawn && !in_clone_stall;
-		
-		wire go_zero = warp_num == warp_state;
-		
-		wire[`NW_M1:0] warp_num_temp;
-		wire[`NW_M1:0] warp_state_temp;
-	
-		assign warp_num_temp   = (reset || go_zero || remove_warp || add_warp) ? 0 : (warp_num + 1);
-		assign warp_state_temp = (add_warp) ? (warp_state + 1) : (remove_warp ? (warp_state -1) : warp_state);
-				
+
 		always @(posedge clk or posedge reset) begin
-			warp_num   <= warp_num_temp;
-			warp_state <= warp_state_temp;
+			if (reset || (warp_num == warp_state) || remove_warp || add_warp) begin
+				warp_num   <= 0;
+			end else begin
+				warp_num   <= warp_num + 1;
+			end
+
+			if (add_warp) begin
+				// $display("Adding a new warp %h", warp_state);
+				warp_state <= warp_state + 1;
+			end else if (remove_warp) begin
+				// $display("Removing a warp %h", warp_state);
+				warp_state <= warp_state - 1;
+			end
 		end
-				
-//		always @(posedge clk or posedge reset) begin
-//			if (reset) begin
-//				warp_num <= 0;
-//			end if (go_zero) begin
-//				warp_num   <= 0;
-//			end if (remove_warp) begin
-//				warp_num   <= 0;
-//			end if (add_warp) begin
-//				warp_num   <= 0;
-//			end else begin
-//				warp_num   <= warp_num + 1;
-//			end
-//		end
-//		
-//		always @(posedge clk or posedge reset) begin
-//			if (add_warp) begin
-//				// $display("Adding a new warp %h", warp_state);
-//				warp_state <= warp_state + 1;
-//			end else if (remove_warp) begin
-//				// $display("Removing a warp %h", warp_state);
-//				warp_state <= warp_state - 1;
-//			end
-//		end
 
 		assign out_ebreak = (warp_state == 0) && in_ebreak;
 
@@ -138,11 +117,24 @@ module VX_fetch (
 			.out_valid     (warp_one_valid)
 			);
 
+		// always @(*) begin
+		// 	if (in_wspawn) begin
+		// 		$display("Spawning a warp @ %h",in_wspawn_pc);
+		// 	end
+		// end
+
+		// always @(posedge clk) begin 
+		// 	$display("curr warp: %h Threads:%d%d PC: %h", warp_num, out_valid[0],out_valid[1], out_PC);
+		// end
+
+		// always @(*) begin
+		// 	if (warp_num == 1) begin
+		// 		$display("Going to PC: %h", warp_one_pc);
+		// 	end
+		// end
+
 		assign out_PC    = (warp_num == 0) ? warp_zero_pc    : warp_one_pc;
 		assign out_valid = (warp_num == 0) ? warp_zero_valid : warp_one_valid;
-
-		// assign out_PC    = warp_zero_pc;
-		// assign out_valid = warp_zero_valid;
 
 		// always @(*) begin
 		// 	$display("FETCH PC: %h (%h, %h, %h)",delete, delete, in_jal_dest, in_branch_dest);

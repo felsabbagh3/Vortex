@@ -5,13 +5,13 @@
 
 module VX_e_m_reg (
 		input wire           clk,
-		input wire[31:0]     in_alu_result[`NT_M1:0],
+		input wire[(`NT*32)-1:0]     in_alu_result,
 		input wire[4:0]      in_rd,
 		input wire[1:0]      in_wb,
 		input wire[4:0]      in_rs1,
 		input wire[4:0]      in_rs2,
-		input wire[31:0]     in_a_reg_data[`NT_M1:0],
-		input wire[31:0]     in_b_reg_data[`NT_M1:0],
+		input wire[(`NT*32)-1:0]     in_a_reg_data,
+		input wire[(`NT*32)-1:0]     in_b_reg_data,
 		input wire[2:0]      in_mem_read, // NEW
 		input wire[2:0]      in_mem_write, // NEW
 		input wire[31:0]     in_PC_next,
@@ -30,13 +30,13 @@ module VX_e_m_reg (
 		output wire[11:0]     out_csr_address,
 		output wire           out_is_csr,
 		output wire[31:0]     out_csr_result,
-		output wire[31:0]     out_alu_result[`NT_M1:0],
+		output wire[(`NT*32)-1:0]     out_alu_result,
 		output wire[4:0]      out_rd,
 		output wire[1:0]      out_wb,
 		output wire[4:0]      out_rs1,
 		output wire[4:0]      out_rs2,
-		output wire[31:0]     out_a_reg_data[`NT_M1:0],
-		output wire[31:0]     out_b_reg_data[`NT_M1:0],
+		output wire[(`NT*32)-1:0]     out_a_reg_data,
+		output wire[(`NT*32)-1:0]     out_b_reg_data,
 		output wire[2:0]      out_mem_read,
 		output wire[2:0]      out_mem_write,
 		output wire[31:0]     out_curr_PC,
@@ -50,12 +50,12 @@ module VX_e_m_reg (
 	);
 
 
-		reg[31:0]     alu_result[`NT_M1:0];
+		reg[(`NT*32)-1:0]     alu_result;
 		reg[4:0]      rd;
 		reg[4:0]      rs1;
 		reg[4:0]      rs2;
-		reg[31:0]     a_reg_data[`NT_M1:0];
-		reg[31:0]     b_reg_data[`NT_M1:0];
+		reg[(`NT*32)-1:0]     a_reg_data;
+		reg[(`NT*32)-1:0]     b_reg_data;
 		reg[1:0]      wb;
 		reg[31:0]     PC_next;
 		reg[2:0]      mem_read;

@@ -1,5 +1,5 @@
-# Dynamic Instructions: 222955
-# of total cycles:      222962
+# Dynamic Instructions: 260843
+# of total cycles:      260850
 # of forwarding stalls: 0
 # of branch stalls:     0
 # CPI:                  1.00003

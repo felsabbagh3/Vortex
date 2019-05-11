@@ -10,14 +10,15 @@ module VX_register_file_master_slave (
   input wire[4:0]    in_src2,
   input wire         in_wspawn,
   input wire         in_to_wspawn,
-  input wire[31:0]   in_wspawn_regs[31:0],
+  input wire[(32*32)-1:0]   in_wspawn_regs,
 
   output reg[31:0]   out_src1_data,
   output reg[31:0]   out_src2_data,
-  output wire[31:0]  out_regs[31:0]
+  output wire[(32*32)-1:0] out_regs
 );
 
 	reg[31:0] registers[31:0];
+	wire[31:0] temp_regs[31:0];
 
 	wire[31:0] write_data;
 
@@ -26,7 +27,11 @@ module VX_register_file_master_slave (
 	wire write_enable;
 
 
-	assign out_regs = registers;
+	genvar i;
+	generate
+		for (i=0; i<32; i=i+1) assign out_regs[(32*i)+31:32*i] = registers[i];
+	endgenerate
+	
 
 	// reg[5:0] i;
 	// always @(posedge clk) begin
@@ -45,15 +50,22 @@ module VX_register_file_master_slave (
 	// 	$display("WID: %d: %h",11,registers[11]);
 	// end
 
+	genvar z;
+	generate
+		for (z = 0; z<32;z=z+1) assign temp_regs[z] = in_wspawn_regs[(32*z)+31:(32*z)];
+	endgenerate
+
 	assign write_enable   = (in_write_register && (in_rd != 5'h0)) && in_valid && in_wb_warp;
 
+	integer f;
 	always @(posedge clk) begin
 		if(write_enable && !in_wspawn) begin
 			// $display("RF: Writing %h to %d",write_data, write_register);
 			registers[write_register] <= write_data;
 		end else if (in_wspawn && in_to_wspawn) begin
 			// $display("WSPAWN IN MASTER SLAVE");
-			registers <= in_wspawn_regs;
+			for (f = 0; f < 32; f=f+1) registers[f] <= temp_regs[f];
+
 		end
 	end
 

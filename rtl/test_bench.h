@@ -175,13 +175,17 @@ bool Vortex::dbus_driver()
     // std::cout << "DBUS DRIVER\n" << std::endl;
     ////////////////////// DBUS //////////////////////
 
+
     int valid_mask = 0x1;
     for (unsigned curr_th = 0; curr_th < NT; curr_th++)
     {
+
         if ((vortex->out_cache_driver_in_mem_write != NO_MEM_WRITE) && (vortex->out_cache_driver_in_valid & (valid_mask << curr_th)))
         {
-                data_write = (uint32_t) vortex->out_cache_driver_in_data[curr_th];
-                addr       = (uint32_t) vortex->out_cache_driver_in_address[curr_th];
+
+
+                data_write = (uint32_t) (vortex->out_cache_driver_in_data >> (curr_th * 32))     & 0xffffffff;
+                addr       = (uint32_t) (vortex->out_cache_driver_in_address >> (curr_th * 32))  & 0xffffffff;
 
                 if (addr == 0x00010000)
                 {
@@ -208,7 +212,7 @@ bool Vortex::dbus_driver()
 
     }
 
-
+    uint32_t * everything = (uint32_t *) malloc(4 * NT);
     // printf("----\n");
     for (unsigned curr_th = 0; curr_th < NT; curr_th++)
     {
@@ -217,50 +221,56 @@ bool Vortex::dbus_driver()
         {
 
 
-                addr = (uint32_t) vortex->out_cache_driver_in_address[curr_th];
+                addr = (uint32_t) (vortex->out_cache_driver_in_address >> (curr_th * 32))  & 0xffffffff;
                 ram.getWord(addr, &data_read);
 
                 if (vortex->out_cache_driver_in_mem_read == LB_MEM_READ)
                 {
 
-                    vortex->in_cache_driver_out_data[curr_th] = (data_read & 0x80) ? (data_read | 0xFFFFFF00) : (data_read & 0xFF);
+                    everything[curr_th] = (data_read & 0x80) ? (data_read | 0xFFFFFF00) : (data_read & 0xFF);
 
                 } else if (vortex->out_cache_driver_in_mem_read == LH_MEM_READ)
                 {
 
-                    vortex->in_cache_driver_out_data[curr_th] = (data_read & 0x8000) ? (data_read | 0xFFFF0000) : (data_read & 0xFFFF);
+                    everything[curr_th] = (data_read & 0x8000) ? (data_read | 0xFFFF0000) : (data_read & 0xFFFF);
 
                 } else if (vortex->out_cache_driver_in_mem_read == LW_MEM_READ)
                 {
                     // printf("Reading mem - Addr: %x = %x\n", addr, data_read);
                     // std::cout << "READING - Addr: " << std::hex << addr << " = " << data_read << "\n";
                     std::cout << std::dec;
-                    vortex->in_cache_driver_out_data[curr_th] = data_read;
+                    everything[curr_th] = data_read;
 
                 } else if (vortex->out_cache_driver_in_mem_read == LBU_MEM_READ)
                 {
 
-                    vortex->in_cache_driver_out_data[curr_th] = (data_read & 0xFF);
+                    everything[curr_th] = (data_read & 0xFF);
 
                 } else if (vortex->out_cache_driver_in_mem_read == LHU_MEM_READ)
                 {
 
-                    vortex->in_cache_driver_out_data[curr_th] = (data_read & 0xFFFF);
+                    everything[curr_th] = (data_read & 0xFFFF);
 
                 }
                 else
                 {
-                    vortex->in_cache_driver_out_data[curr_th] = 0xbabebabe;
+                    everything[curr_th] = 0xbabebabe;
                 }
         }
         else
         {
-            vortex->in_cache_driver_out_data[curr_th] = 0xbabebabe;
+            everything[curr_th] = 0xbabebabe;
         }
 
     }
     // printf("******\n");
 
+    char * byte_everything = (char *) everything;
+    char * byte_out_datas  = (char *) &(vortex->in_cache_driver_out_data);
+
+    for (int g = 0; g < (4 * NT); g++) byte_out_datas[g] = byte_everything[g];
+
+    free(everything);
 
     return false;
 }

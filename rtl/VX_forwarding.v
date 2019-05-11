@@ -11,7 +11,7 @@ module VX_forwarding (
 		// INFO FROM EXE
 		input wire[4:0]      in_execute_dest,
 		input wire[1:0]      in_execute_wb,
-		input wire[31:0]     in_execute_alu_result[`NT_M1:0],
+		input wire[(`NT*32)-1:0]     in_execute_alu_result,
 		input wire[31:0]     in_execute_PC_next,
 		input wire           in_execute_is_csr,
 		input wire[11:0]     in_execute_csr_address,
@@ -20,8 +20,8 @@ module VX_forwarding (
 		// INFO FROM MEM
 		input wire[4:0]      in_memory_dest,
 		input wire[1:0]      in_memory_wb,
-		input wire[31:0]     in_memory_alu_result[`NT_M1:0],
-		input wire[31:0]     in_memory_mem_data[`NT_M1:0],
+		input wire[(`NT*32)-1:0]  in_memory_alu_result,
+		input wire[(`NT*32)-1:0]  in_memory_mem_data,
 		input wire[31:0]     in_memory_PC_next,
 		input wire           in_memory_is_csr,
 		input wire[11:0]     in_memory_csr_address,
@@ -31,8 +31,8 @@ module VX_forwarding (
 		// INFO FROM WB
 		input wire[4:0]      in_writeback_dest,
 		input wire[1:0]      in_writeback_wb,
-		input wire[31:0]     in_writeback_alu_result[`NT_M1:0],
-		input wire[31:0]     in_writeback_mem_data[`NT_M1:0],
+		input wire[(`NT*32)-1:0]     in_writeback_alu_result,
+		input wire[(`NT*32)-1:0]     in_writeback_mem_data,
 		input wire[31:0]     in_writeback_PC_next,
 		input wire[`NW_M1:0] in_writeback_warp_num,
 
@@ -41,8 +41,8 @@ module VX_forwarding (
 		output wire       out_src1_fwd,
 		output wire       out_src2_fwd,
 		output wire       out_csr_fwd,
-		output wire[31:0] out_src1_fwd_data[`NT_M1:0],
-		output wire[31:0] out_src2_fwd_data[`NT_M1:0],
+		output wire[(`NT*32)-1:0] out_src1_fwd_data,
+		output wire[(`NT*32)-1:0] out_src2_fwd_data,
 		output wire[31:0] out_csr_fwd_data,
 		output wire       out_fwd_stall
 	);
@@ -66,18 +66,18 @@ module VX_forwarding (
 		wire csr_exe_fwd;
 		wire csr_mem_fwd;
 
-		wire[31:0] use_execute_PC_next[`NT_M1:0];
-		wire[31:0] use_memory_PC_next[`NT_M1:0];
-		wire[31:0] use_writeback_PC_next[`NT_M1:0];
+		wire[(`NT*32)-1:0] use_execute_PC_next;
+		wire[(`NT*32)-1:0] use_memory_PC_next;
+		wire[(`NT*32)-1:0] use_writeback_PC_next;
 
 
 		genvar index;
 		generate  
 		for (index=0; index < `NT; index=index+1)  
 		  begin: gen_code_label  
-			assign use_execute_PC_next[index]   = in_execute_PC_next;
-			assign use_memory_PC_next[index]    = in_memory_PC_next;
-			assign use_writeback_PC_next[index] = in_writeback_PC_next;
+			assign use_execute_PC_next[(32*index)+31:(32*index)]   = in_execute_PC_next;
+			assign use_memory_PC_next[(32*index)+31:(32*index)]    = in_memory_PC_next;
+			assign use_writeback_PC_next[(32*index)+31:(32*index)] = in_writeback_PC_next;
 		  end  
 		endgenerate  
 
@@ -170,9 +170,9 @@ module VX_forwarding (
 									    ( src2_wb_fwd ) ?  (wb_jal ? use_writeback_PC_next : (wb_mem_read ?  in_writeback_mem_data : in_writeback_alu_result)) :
 										 	in_execute_alu_result; // last one should be deadbeef
 		
-		assign out_csr_fwd_data = csr_exe_fwd ? in_execute_alu_result :
+		assign out_csr_fwd_data = csr_exe_fwd ? in_execute_alu_result[31:0] :
 									 csr_mem_fwd ? in_memory_csr_result :
-									 	    	in_execute_alu_result; // last one should be deadbeef
+									 	    	in_execute_alu_result[31:0]; // last one should be deadbeef
 
 
 

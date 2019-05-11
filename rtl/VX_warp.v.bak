@@ -19,8 +19,8 @@ module VX_warp (
 );
 
 		reg[31:0]     real_PC;
-		reg[31:0]     temp_PC;
-		wire[31:0]     use_PC;
+		var[31:0]     temp_PC;
+		var[31:0]     use_PC;
 		reg[`NT_M1:0] valid;
 
 
@@ -35,7 +35,7 @@ module VX_warp (
 
 		always @(*) begin
 			if (in_change_mask) begin
-				valid <= in_thread_mask;
+				assign valid = in_thread_mask;
 			end
 		end
 
@@ -49,11 +49,11 @@ module VX_warp (
 
 		always @(*) begin
 			if (in_jal == 1'b1) begin
-				temp_PC <= in_jal_dest;
+				temp_PC = in_jal_dest;
 			end else if (in_branch_dir == 1'b1) begin
-				temp_PC <= in_branch_dest;
+				temp_PC = in_branch_dest;
 			end else begin
-				temp_PC <= real_PC;
+				temp_PC = real_PC;
 			end
 		end
 

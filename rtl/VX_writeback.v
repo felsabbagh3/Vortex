@@ -6,8 +6,8 @@ module VX_writeback (
 		/* verilator lint_off UNUSED */
 		input wire       clk,
 		/* verilator lint_off UNUSED */
-		input wire[31:0] in_alu_result[`NT_M1:0],
-		input wire[31:0] in_mem_result[`NT_M1:0],
+		input wire[(`NT*32)-1:0] in_alu_result,
+		input wire[(`NT*32)-1:0] in_mem_result,
 		input wire[4:0]  in_rd,
 		input wire[1:0]  in_wb,
 		input wire[31:0] in_PC_next,
@@ -16,7 +16,7 @@ module VX_writeback (
 		/* verilator lint_on UNUSED */
 		input wire [`NW_M1:0]  in_warp_num,
 
-		output wire[31:0] out_write_data[`NT_M1:0],
+		output wire[(`NT*32)-1:0] out_write_data,
 		output wire[4:0] out_rd,
 		output wire[1:0] out_wb,
 		output wire[`NW_M1:0]  out_warp_num
@@ -25,7 +25,7 @@ module VX_writeback (
 		wire is_jal;
 		wire uses_alu;
 
-		wire[31:0] out_pc_data[`NT_M1:0];
+		wire[(`NT*32)-1:0] out_pc_data;
 
 
 		// genvar index;
@@ -38,7 +38,7 @@ module VX_writeback (
 		generate
 			for (i = 0; i < `NT; i=i+1)
 			begin
-				assign out_pc_data[i] = in_PC_next;
+				assign out_pc_data[(32*i)+31:(32*i)] = in_PC_next;
 			end
 		endgenerate
 

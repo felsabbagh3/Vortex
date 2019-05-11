@@ -10,9 +10,9 @@ module VX_register_file (
   input wire[4:0]   in_src1,
   input wire[4:0]   in_src2,
 
-  output wire[31:0]  out_regs[31:0],
-  output reg[31:0]   out_src1_data,
-  output reg[31:0]   out_src2_data
+  output wire[(32*32)-1:0] out_regs,
+  output reg[31:0]         out_src1_data,
+  output reg[31:0]         out_src2_data
 );
 
 	reg[31:0] registers[31:0];
@@ -35,7 +35,12 @@ module VX_register_file (
 	// 	$display("WID: %d: %h",11,registers[11]);
 	// end
 
-	assign out_regs = registers;
+	genvar i;
+	generate
+		for (i=0; i<32; i=i+1) assign out_regs[(32*i)+31:(32*i)] = registers[i];
+	endgenerate
+	
+	
 
 	assign write_data     = in_data;
 	assign write_register = in_rd;
