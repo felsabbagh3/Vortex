@@ -66,10 +66,10 @@ module VX_warp (
 			end else if (in_wspawn == 1'b1) begin
 				// $display("Inside warp ***** Spawn @ %H",in_wspawn_pc);
 				real_PC <= in_wspawn_pc;
-			end else if (!stall) begin
-				real_PC <= use_PC + 32'h4;
+			end else if (stall) begin
+				real_PC <= use_PC
 			end else begin
-				real_PC <= use_PC;
+				real_PC <= use_PC + 32'h4;;
 			end
 
 		end

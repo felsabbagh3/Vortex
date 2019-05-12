@@ -101,6 +101,7 @@ module VX_context (
 				end
 		endgenerate
 
-		assign out_clone_stall = ((state_stall == 0) && in_is_clone) || ((state_stall != 1) && in_is_clone);
+		// assign out_clone_stall = ((state_stall == 0) || (state_stall != 1)) && in_is_clone;
+		assign out_clone_stall = 0;
 
 endmodule
