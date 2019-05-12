@@ -160,19 +160,24 @@ module VX_forwarding (
 		// 	if (out_fwd_stall) $display("FWD STALL");
 		// end
 
-		assign out_src1_fwd_data = src1_exe_fwd ? ((exe_jal) ? use_execute_PC_next : in_execute_alu_result) :
-			                          (src1_mem_fwd) ? ((mem_jal) ? use_memory_PC_next : (mem_mem_read ? in_memory_mem_data : in_memory_alu_result)) :
-									    ( src1_wb_fwd ) ?  (wb_jal ? use_writeback_PC_next : (wb_mem_read ?  in_writeback_mem_data : in_writeback_alu_result)) :
-										 	in_execute_alu_result; // last one should be deadbeef
+		// assign out_src1_fwd_data = src1_exe_fwd ? ((exe_jal) ? use_execute_PC_next : in_execute_alu_result) :
+		// 	                          (src1_mem_fwd) ? ((mem_jal) ? use_memory_PC_next : (mem_mem_read ? in_memory_mem_data : in_memory_alu_result)) :
+		// 							    ( src1_wb_fwd ) ?  (wb_jal ? use_writeback_PC_next : (wb_mem_read ?  in_writeback_mem_data : in_writeback_alu_result)) :
+		// 								 	in_execute_alu_result; // last one should be deadbeef
 
-		assign out_src2_fwd_data = src2_exe_fwd ? ((exe_jal) ? use_execute_PC_next : in_execute_alu_result) :
-			                        (src2_mem_fwd) ? ((mem_jal) ? use_memory_PC_next : (mem_mem_read ? in_memory_mem_data : in_memory_alu_result)) :
-									    ( src2_wb_fwd ) ?  (wb_jal ? use_writeback_PC_next : (wb_mem_read ?  in_writeback_mem_data : in_writeback_alu_result)) :
-										 	in_execute_alu_result; // last one should be deadbeef
+		// assign out_src2_fwd_data = src2_exe_fwd ? ((exe_jal) ? use_execute_PC_next : in_execute_alu_result) :
+		// 	                        (src2_mem_fwd) ? ((mem_jal) ? use_memory_PC_next : (mem_mem_read ? in_memory_mem_data : in_memory_alu_result)) :
+		// 							    ( src2_wb_fwd ) ?  (wb_jal ? use_writeback_PC_next : (wb_mem_read ?  in_writeback_mem_data : in_writeback_alu_result)) :
+		// 								 	in_execute_alu_result; // last one should be deadbeef
 		
-		assign out_csr_fwd_data = csr_exe_fwd ? in_execute_alu_result[31:0] :
-									 csr_mem_fwd ? in_memory_csr_result :
-									 	    	in_execute_alu_result[31:0]; // last one should be deadbeef
+		// assign out_csr_fwd_data = csr_exe_fwd ? in_execute_alu_result[31:0] :
+		// 							 csr_mem_fwd ? in_memory_csr_result :
+		// 							 	    	in_execute_alu_result[31:0]; // last one should be deadbeef
+
+
+		assign out_src1_fwd_data = 32'hdeadbeef;
+		assign out_src2_fwd_data = 32'hdeadbeef;
+		assign out_csr_fwd_data  = 32'hdeadbeef;
 
 
 
