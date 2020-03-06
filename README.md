@@ -1,6 +1,11 @@
 
 
 
+
+
+# Vortex Currently lives in a different Repo. This Version is very outdated.
+# New Repo: https://github.gatech.edu/casl/Vortex
+
 # Vortex RISC-V GPGPU
 
 Vortex currently supported RV32IM.
